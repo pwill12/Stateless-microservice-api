@@ -41,7 +41,7 @@ app.route("/articles")
     });
 })
 
-.post(function(req, res) {
+.post(verifyToken, (req, res) => {
     // console.log(req.body.title)
     // console.log(req.body.content)
 
@@ -50,6 +50,19 @@ app.route("/articles")
         title: req.body.title,
         content: req.body.content
     });
+
+    jwt.verify(req.token, "secretkey", (err, authuserdata) => {
+
+        if (!err) {
+            res.json({
+                Title: req.body.title,
+                Content: req.body.content,
+                authuserdata
+              });
+        } else {
+        res.sendStatus(403)
+        }
+      });
 
     newArticle.save(function(err) {
         if (!err) {
@@ -60,6 +73,24 @@ app.route("/articles")
     });
 })
 
+app.post('/articles/login',function (req,res) {
+    //our mock user
+  const username = {
+    id: 1,
+    username: "anyuser",
+    email: "anyuser@email.com",
+  };
+
+  jwt.sign({username}, "secretkey", (err, token) => {
+    res.json({
+      token
+    });
+  });
+})
+
+
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6eyJpZCI6MSwidXNlcm5hbWUiOiJhbnl1c2VyIiwiZW1haWwiOiJhbnl1c2VyQGVtYWlsLmNvbSJ9LCJpYXQiOjE2NDc5OTg4Nzd9.HCJPGrmXm3uC76WhgxWCEUyBzpIXkWDPXJ3WAWVyYa0
 // .delete(function(req, res) {
 
 //     Article.deleteMany(function(err) {
@@ -80,7 +111,7 @@ app.route("/articles/:articleTitle")
         if (!err) {
             res.send(found)
         } else {
-            console.log(err)
+            res.sendStatus(403)
         }
     })
 })
@@ -91,6 +122,8 @@ app.route("/articles/:articleTitle")
         function(err) {
             if (!err) {
                 res.send("Successfully updated the selected article.");
+            }else{
+                res.sendStatus(403)
             }
         }
     );
@@ -143,31 +176,31 @@ app.route("/articles/:articleTitle")
   
 //   //auth method: bearer (access_token)
   
-//   function verifyToken(req, res, next) {
-//     //get aut-hheader value
-//     const bearerHeader = req.headers['auth'];
-//     //check bearer is not undefined
-//     if (typeof bearerHeader !== "undefined") {
-//       //using the split function to turn the string into an array
-//       //split the space
-//       const bearer = bearerHeader.split(" ")[1];
-//       //get token from array
+  function verifyToken(req, res, next) {
+    //get aut-hheader value
+    const bearerHeader = req.headers['auth'];
+    //check bearer is not undefined
+    if (typeof bearerHeader !== "undefined") {
+      //using the split function to turn the string into an array
+      //split the space
+      const bearer = bearerHeader.split(" ")[1];
+      //get token from array
   
-//       // const bearertoken = bearer[1];
+      // const bearertoken = bearer[1];
   
-//       //set bearertoken to reqtoken
+      //set bearertoken to reqtoken
   
-//       req.token = bearer;
+      req.token = bearer;
   
-//       //middleware
+      //middleware
   
-//       next()
-//     } else {
-//       //send an error message
-//       // res.send("invalid");
-//       res.sendStatus(403)
-//     }
-//   }
+      next()
+    } else {
+      //send an error message
+      // res.send("invalid");
+      res.sendStatus(403)
+    }
+  }
 
 
 
