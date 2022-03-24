@@ -46,8 +46,6 @@ describe('Rest api', () => {
         })
     })
 
-
-
     // Test the post (token login) route(been having errors reading null properties)
 
     // works perfectly using postman(received a token after post request)
@@ -117,7 +115,7 @@ describe('Rest api', () => {
                 done()
                 // })
             
-        })   
+        })
     })
 
     //test the patch (json) route
