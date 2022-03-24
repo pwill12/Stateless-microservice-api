@@ -203,6 +203,9 @@ function verifyToken(req, res, next) {
   }
 }
 
+
+/////////creating our thumbnail post request////
+
 app.post("/articles/thumbnail", function (req, res) {
   const imgurl = req.body.url;
 
@@ -215,13 +218,14 @@ app.post("/articles/thumbnail", function (req, res) {
           res.sendStatus(403);
         } else {
           // res.sendStatus(200)
-          res.send('<img src="' + img100 + '">');
+          res.send('<img src="' + img100 + '">');//send the resized image to the user
         }
       });
     }
   });
 });
 
+//exporting our app modules
 module.exports = app.listen(3000, function () {
   console.log("Server started on port 3000");
 });
