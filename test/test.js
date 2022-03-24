@@ -95,9 +95,9 @@ describe('Rest api', () => {
                     // res.should.have.status(200);
 
                     if (username !== musername) {
-                        status(200)
+                        res.status(403)
                     } else {
-                        status(403)
+                        status(200)
                     }
                 })
 
